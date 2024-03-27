@@ -99,7 +99,7 @@
     if ([self.forwardDelegate respondsToSelector:invocation.selector]) {
         [invocation invokeWithTarget:self.forwardDelegate];
     }
-    else {
+    else if ([super respondsToSelector:invocation.selector]) {
         [super forwardInvocation:invocation];
     }
 }
