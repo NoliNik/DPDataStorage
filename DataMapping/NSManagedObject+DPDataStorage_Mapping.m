@@ -455,10 +455,10 @@ static BOOL equalCheckForEntity(NSEntityDescription *entityDescription) {
                 }
                 else {
                     id currentValue = [self valueForKey:attributeName];
-                    if (newValue == nil && currentValue != nil) {
+                    if (currentValue == nil && newValue != nil) {
                         [self setValue:newValue forKey:attributeName];
                     }
-                    else if ([currentValue isEqual:newValue] == NO) {
+                    else if (currentValue != nil && [currentValue isEqual:newValue] == NO) {
                         [self setValue:newValue forKey:attributeName];
                     }
                 }
@@ -531,7 +531,11 @@ static BOOL equalCheckForEntity(NSEntityDescription *entityDescription) {
             }
 
             if (value == [NSNull null]) {
-                if (!equalCheck || [self valueForKey:keyName] != nil) {
+                if (!equalCheck) {
+                    [self setValue:nil forKey:keyName];
+                } else if ([[self valueForKey:keyName] respondsToSelector:@selector(count)] == YES && [[self valueForKey:keyName] count] != 0) {
+                    [self setValue:nil forKey:keyName];
+                } else if ([[self valueForKey:keyName] respondsToSelector:@selector(count)] == NO && [self valueForKey:keyName] != nil) {
                     [self setValue:nil forKey:keyName];
                 }
             }
